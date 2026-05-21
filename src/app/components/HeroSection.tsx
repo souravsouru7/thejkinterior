@@ -67,17 +67,48 @@ export default function HeroSection() {
     const onCanPlay = () => setVideoReady(true);
     video.addEventListener("canplay", onCanPlay);
     if (video.readyState >= 3) setVideoReady(true);
-    const onTime = () => {
-      if (!Number.isFinite(video.duration) || video.duration <= 1) return;
-      if (video.currentTime >= video.duration - 0.28) {
+
+    // prefer native loop; avoid manual timeupdate resets which can cause
+    // visual stutter. Handle `ended` to re-seek cleanly and retry play when
+    // browsers pause playback for power-saving.
+    const onEnded = () => {
+      try {
+        // small offset avoids potential black frames on some encoders
         video.currentTime = 0.04;
-        void video.play();
+        void video.play().catch((err) => {
+          if (err?.name !== "AbortError") console.error("Video play after ended failed", err);
+        });
+      } catch (err) {
+        console.error("Video ended handler error", err);
       }
     };
-    video.addEventListener("timeupdate", onTime);
+    video.addEventListener("ended", onEnded);
+
+    // Try to play and swallow AbortError (power saving). When the document
+    // becomes visible again, retry playback.
+    const tryPlay = async () => {
+      try {
+        await video.play();
+      } catch (err: any) {
+        if (err?.name === "AbortError") {
+          // expected on some platforms; will retry on visibilitychange
+          return;
+        }
+        console.error("Video play failed", err);
+      }
+    };
+
+    void tryPlay();
+
+    const onVisibility = () => {
+      if (!document.hidden) void tryPlay();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
-      video.removeEventListener("timeupdate", onTime);
+      video.removeEventListener("ended", onEnded);
       video.removeEventListener("canplay", onCanPlay);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
@@ -145,6 +176,14 @@ export default function HeroSection() {
           disablePictureInPicture
           controlsList="nodownload nofullscreen noremoteplayback"
           aria-hidden="true"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            // promote to its own layer for smoother transforms
+            willChange: "transform, opacity",
+            transform: "translateZ(0)",
+          }}
         >
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
