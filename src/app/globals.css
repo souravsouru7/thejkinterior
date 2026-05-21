@@ -60,7 +60,7 @@ a {
 
 /* Extra bottom padding on mobile so sticky bar doesn't cover content */
 @media (max-width: 639px) {
-  body { padding-bottom: 60px; }
+  body { padding-bottom: 70px; } /* matches 58px bar + safe gap */
 
   /* Hero headlines — tighten on very small screens */
   h1 { word-break: break-word; overflow-wrap: break-word; }
@@ -3762,33 +3762,32 @@ a {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(216, 189, 125, 0.3);
-  border-radius: 2px;
+  /* Always clearly visible — dark fill + gold border works on any bg */
+  background: rgba(10, 8, 6, 0.65);
+  border: 1px solid rgba(216, 189, 125, 0.55);
+  border-radius: 3px;
   cursor: pointer;
   flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: background 250ms ease, border-color 250ms ease;
 }
 
 .jk-hamburger:hover {
-  background: rgba(216, 189, 125, 0.08);
-  border-color: rgba(216, 189, 125, 0.55);
-}
-
-.jk-site-header--scrolled .jk-hamburger {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(216, 189, 125, 0.25);
+  background: rgba(216, 189, 125, 0.14);
+  border-color: var(--gold);
 }
 
 .jk-ham-bar {
   display: block;
-  width: 100%;
+  width: 20px;
   height: 1.5px;
-  background: rgba(255, 255, 255, 0.72);
+  background: #ffffff;
   transition: transform 0.3s ease, opacity 0.3s ease;
   transform-origin: center;
 }
