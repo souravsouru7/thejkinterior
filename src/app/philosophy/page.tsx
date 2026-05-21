@@ -90,6 +90,7 @@ function HeroSection() {
           src="/images/living-room.jpg"
           alt="Refined interior with material restraint"
           fill
+          
           priority
           sizes="100vw"
           className="object-cover"

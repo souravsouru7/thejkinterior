@@ -29,10 +29,10 @@ export default function AnnouncementStrip() {
         position: "sticky",
         top: 0,
         zIndex: 61,
-        background: "rgba(10,9,7,0.96)",
-        borderBottom: "1px solid rgba(176,137,104,0.18)",
+        background: "linear-gradient(90deg, #1a1510 0%, #100e0a 50%, #1a1510 100%)",
+        borderBottom: "1px solid rgba(216,189,125,0.22)",
         backdropFilter: "blur(8px)",
-        height: "38px",
+        height: "34px",
         display: "flex",
         alignItems: "center",
       }}

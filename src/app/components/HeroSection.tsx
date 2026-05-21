@@ -216,7 +216,7 @@ export default function HeroSection() {
       </nav>
 
       {/* Content */}
-      <div className="relative z-20 mx-auto grid min-h-[calc(100vh-122px)] w-full max-w-[1500px] items-center gap-8 px-5 pb-8 pt-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.5fr)] lg:px-12 xl:gap-20">
+      <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1500px] items-center gap-8 px-5 pb-8 pt-[118px] sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.5fr)] lg:px-12 xl:gap-20">
 
         {/* Left: copy */}
         <div className="flex flex-col gap-0 max-w-[740px]">

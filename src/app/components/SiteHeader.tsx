@@ -20,6 +20,7 @@ const NAV_ITEMS = [
 export default function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Close on route change
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -30,18 +31,29 @@ export default function SiteHeader() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  // Scroll-aware header
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <header className="jk-site-header">
+      <header className={`jk-site-header${scrolled ? " jk-site-header--scrolled" : ""}`}>
+        {/* Gold shimmer border line — visible only when scrolled */}
+        <div className="jk-header-border" aria-hidden="true" />
+
         <nav className="jk-site-nav">
           <Link href="/" className="jk-logo" aria-label="JK Interiors home">
             <Image
               src="/logo.png"
               alt="JK Interiors"
-              width={48}
-              height={48}
+              width={44}
+              height={44}
               className="object-contain"
-              style={{ maxHeight: "48px", width: "auto" }}
+              style={{ maxHeight: "44px", width: "auto", filter: "drop-shadow(0 0 8px rgba(216,189,125,0.25))" }}
               priority
             />
             <span className="jk-logo-copy">
@@ -65,7 +77,12 @@ export default function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="jk-nav-cta hidden sm:flex">
+            <a
+              href={WA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hidden sm:flex ${scrolled ? "jk-nav-cta" : "jk-nav-cta-ghost"}`}
+            >
               Schedule a call
             </a>
 
